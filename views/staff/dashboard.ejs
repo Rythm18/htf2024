@@ -1,0 +1,179 @@
+<%- include('../partials/_header.ejs') %>
+<%- include('../partials/_github-corner.ejs') %>
+<%- include('../partials/_navbar.ejs') %>
+<%- include('../partials/translate.ejs') %>
+
+
+<div class="alert alert-success" role="alert" style="margin: 10px 50px;">
+    <strong>Welcome To staff Dashbord !</strong>
+</div>
+
+<div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+        <!--reply staff nav -->
+        <li class="nav-item">
+            <a class="nav-link active" id="staffs-tab" data-toggle="tab" href="#staffs" role="tab"
+                aria-controls="staffs" aria-selected="true">
+                <i class="fas fa-user"></i> <%=staff.name %> 
+            </a>
+        </li>
+
+        <!-- Complaints history nav-->
+        <li class="nav-item">
+            <a class="nav-link" id="complaints-tab" href="/staff/complaints" role="tab" aria-controls="complaints"
+                aria-selected="false">
+                <i class="fas fa-history"></i> Complaints History</a>
+        </li>
+    </ul>
+
+
+    <div class="container">
+        <!--Complaint section -->
+        <div class="tab-content" id="myTab">
+            <div class="tab-pane fade show active" id="staffs" role="tabpanel" aria-labelledby="staffs-tab">
+                <div class="row">
+
+
+                    <div class="col mt-3" id="complaints">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col" class="bold">#</th>
+                                            <th scope="col" class="bold"><i class="fas fa-bullhorn"></i> Complaints</th>
+                                            <th scope="col" class="bold"> Consumer No.</th>
+                                            <th scope="col" class="bold"> Status</th>
+                                           
+                                                    <th scope="col" class="bold"> Locaton</th>
+                                            <th scope="col" class="bold"> Attatchments</th>
+                                            <th scope="col" class="bold">Reply</th>
+                                            <th scope="col" class="bold"></th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% var id;%>
+                                        <% const filterComplaints = complaints.filter(complaint =>   complaint.status === 'pending' ||  complaint.status === 'InProgress' ||  complaint.status === 'Reopen') %>
+
+                                        <% const location = ['123 Main Street, Springfield, IL, USA','25 Baker Street, London, UK' ,'Rue de la Paix, Paris, France' ,'7 Unter den Linden, Berlin, Germany' ,'42 Wall Street, New York, NY, USA' ,'1-1 Chiyoda, Tokyo, Japan' ,'1600 Amphitheatre Parkway, Mountain View, CA, USA','10 Downing Street, London, UK' ,'Piazza di Spagna, Rome, Italy' ,'33 Rue du Faubourg Saint-Antoine, Paris, France'];%>
+                                        <% var i = 0 ; %>
+
+                                        <% count = 0 %>
+                                        <% filterComplaints.forEach((complaint) => { %>
+                                        <tr>
+                                            <th scope="row"><%= count++ %></th>
+                                            <td><%= complaint.description %></td>
+                                            <td><%= complaint.citizenship %></td>
+                                            <td><%= complaint.status %></td>
+                                    
+                                            <td><%= location[i] %></td>
+                                            <td><button type="button" class="btn btn-primary" onclick="downloadFile()">Download</button></td>
+                                                
+                                            </th>
+                                            <td>
+                                                <a href="#" onclick="showreplyBox('<%= complaint._id%>')"> Reply <i class="fas fa-pencil-alt"></i> 
+                                                    <% id = complaint._id %>
+                                                    </a>
+
+                                                <input id="desc_<%=complaint._id%>" type="hidden"
+                                                    value="<%=complaint.description%>" />
+                                            </td>
+                                        </tr>
+                                        <% i = (i+1)%10; %>
+                                        <% }); %>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="col-md-4 mt-4" style="display: none;" id="reply-field">
+                        <div class="card">
+                            <div class="card-header">
+                                <span id="complaint-text"></span>
+                            </div>
+                            <div class="card-body">
+
+                                <form action="/staff/complaints/feedback" method="post">
+                                    <div class="form-group">
+                                        <textarea name="feedback" placeholder="Reply Complaint Here..."
+                                            class="form-control" style="height:100px;" required="required"></textarea>
+                                        
+                                        <input type="hidden" name="complaintId" id="complaintId" value="">
+
+                                        <button type="submit" class="btn btn-primary btn-block my-3">close problem</button>
+                                </form>
+
+                                <form action="/staff/complaints/temp" method="post">
+                                    <div class="form-group">
+                                        <textarea name="feedback" placeholder="Give mail to the user ..."
+                                            class="form-control" style="height:100px;" required="required"></textarea>
+                                        
+                                        <input type="hidden" name="complaint" id="complaint" value="<%= id %>">
+
+                                        <button type="submit" class="btn btn-primary btn-block my-3">send feedback</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+</div>
+
+
+<script>
+    const replyField = document.getElementById('reply-field')
+    const complaintsField = document.getElementById('complaints')
+    const complaintText = document.getElementById("complaint-text")
+    const complaintId = document.getElementById('complaintId')
+    function showreplyBox(id) {
+        const body = document.getElementById("desc_" + id).value;
+        complaintText.innerHTML = body;
+        complaintId.value = id;
+        complaintsField.classList.add('col-md-8');
+        replyField.style.display = 'block';
+    }
+</script>
+
+<script>
+    function downloadFile() {
+        var fileName = 'student_resume.pdf';
+
+// Construct the file path
+var filePath = 'uploads/' + fileName;
+
+// Create a link element
+var link = document.createElement('a');
+
+// Set the href attribute to the file path
+link.href = filePath;
+
+// Set the download attribute with the desired file name
+link.download = fileName;
+
+// Append the link to the document
+document.body.appendChild(link);
+
+// Trigger a click on the link to start the download
+link.click();
+
+// Remove the link from the document
+document.body.removeChild(link);
+}
+</script>
+<%- include('../partials/_footer.ejs') %>

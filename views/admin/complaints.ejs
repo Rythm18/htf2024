@@ -1,0 +1,281 @@
+<%- include('../partials/_header.ejs') %>
+<%- include('../partials/_github-corner.ejs') %>
+<%- include('../partials/translate.ejs') %>
+<%- include('../partials/_navbar.ejs') %>
+
+<div class="alert alert-success" role="alert" style="margin: 10px 60px;">
+    <strong>Welcome To Admin Dashbord Mr. <%= admin.name %> !</strong>
+</div>
+
+<section id="admin-dashboard">
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="users-tab" href="/admin/dashboard" role="tab" aria-controls="users"
+                    aria-selected="true">
+                    <i class="fas fa-tools"></i>
+                    Create Account</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link active" id="complaints-tab" data-toggle="tab" href="/admin/complaints" role="tab"
+                    aria-controls="complaints" aria-selected="false">
+                    <i class="fas fa-envelope-open-text"></i>
+                    Complaints</a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link" id="create-account-tab" href="/admin/users/display" role="tab"
+                    aria-controls="create-account" aria-selected="true">
+                    <i class="fas fa-user-ninja"></i>Users</a>
+            </li>
+
+
+        </ul>
+
+        <div class="row my-5"> 
+
+            <!--display-complaints-->
+            <div class="col" id="display-complaints">
+                <div class="card">
+                    <div class="card-header">
+                        Complaints
+                    </div>
+                    <div class="card-body" style="overflow: auto;">
+                        <ul class="list-group list-group-flush">
+                           
+                            <% const filterComplaints = complaints.filter(complaint =>  typeof complaint.forwardTo === 'undefined') %>
+                            <% const location = ['123 Main Street, Springfield, IL, USA','25 Baker Street, London, UK' ,'Rue de la Paix, Paris, France' ,'7 Unter den Linden, Berlin, Germany' ,'42 Wall Street, New York, NY, USA' ,'1-1 Chiyoda, Tokyo, Japan' ,'1600 Amphitheatre Parkway, Mountain View, CA, USA','10 Downing Street, London, UK' ,'Piazza di Spagna, Rome, Italy' ,'33 Rue du Faubourg Saint-Antoine, Paris, France'];%>
+                            <% var i = 0 ; %>
+
+                            <% filterComplaints.forEach((complaint) => { %>
+
+                            <li class="list-group-item">
+                                <b> Complain date :</b>  <%= complaint.date %></br>
+                                <b> Complain Department :</b><%= complaint.category %></br>
+                                <b> Consumer No. :</b><%= complaint.citizenship %></br>
+                                <b> Complaint :</b><%= complaint.description %> <br>
+                                <b> Address :</b><%= location[i] %>
+                                <a href="#" onclick="forward(`<%= complaint._id %>`)"> 
+                                    <i class="fas fa-share-square float-right" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <% i = (i+1)%10; %>
+                            <% }); %>
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <!-- Forward Complaints-->
+
+            <div class="col-md-4" id="forward-complaints" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        Forward Complaint To:
+                    </div>
+            
+                    <div class="card-body">
+                        <form action="/admin/complaints/forward" method="post">
+                            <div class="form-group">
+                                <input type="text" id="searchInput" onkeyup="filterOptions()" placeholder="Search for staff...">
+                                <select name="staffId" class="browser-default custom-select" required>
+            
+                                    <% const staffs = users.filter((user) => user.role === 'staff') %>
+                                    <% staffs.forEach((staff) => { %>
+                                    <option value=<%=staff._id%>> <%= `${staff.name} (${staff.department})` %> </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+            
+                            <input type="hidden" name="complaintId" value="" id="complaint">
+                            <button type="submit" class="btn btn-primary btn-block">Forward</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="dropdown">Select Option:</label>
+                    <select class="form-control" id="dropdown" onchange="handleDropdownChange()">
+                        <option value="option1">This Month</option>
+                        <option value="option2">This Year</option>
+                    </select>
+                </div>
+             <!-- New card -->
+             <div class="optionsss" id="opt1" >
+                            <div class="card" >
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="media d-flex">
+                                            <div class="align-self-center">
+                                                <i class="icon-pencil primary font-large-2 float-left"></i>
+                                            </div>
+                                            <div class="media-body text-right">
+                                                <h3>Total Complaints</h3>
+                                                <span>18</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </br>
+                        <div class="card" >
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="align-self-center">
+                                            <i class="icon-pencil primary font-large-2 float-left"></i>
+                                        </div>
+                                        <div class="media-body text-right">
+                                            <h3>Pending Complements</h3>
+                                            <span>8</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </br>
+                    <div class="card" >
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="align-self-center">
+                                        <i class="icon-pencil primary font-large-2 float-left"></i>
+                                    </div>
+                                    <div class="media-body text-right">
+                                        <h3>completed Complaintes</h3>
+                                        <span>10</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+
+
+                        <div class="optionsss" id="opt2" style="display: none;" >
+                            <div class="card" >
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="media d-flex">
+                                            <div class="align-self-center">
+                                                <i class="icon-pencil primary font-large-2 float-left"></i>
+                                            </div>
+                                            <div class="media-body text-right">
+                                                <h3>Total Complaints</h3>
+                                                <span>20</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </br>
+                        <div class="card" >
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="media d-flex">
+                                        <div class="align-self-center">
+                                            <i class="icon-pencil primary font-large-2 float-left"></i>
+                                        </div>
+                                        <div class="media-body text-right">
+                                            <h3>Pending Complaints</h3>
+                                            <span>20</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </br>
+                    <div class="card" >
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="align-self-center">
+                                        <i class="icon-pencil primary font-large-2 float-left"></i>
+                                    </div>
+                                    <div class="media-body text-right">
+                                        <h3>Completed Complaints</h3>
+                                        <span>20</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                        </div>
+
+        </div>
+    </div>
+</section>
+
+
+<script>
+    function filterOptions() {
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toUpperCase();
+        const select = document.querySelector('select');
+        const options = select.getElementsByTagName('option');
+
+        for (let i = 0; i < options.length; i++) {
+            const textValue = options[i].textContent || options[i].innerText;
+            if (textValue.toUpperCase().indexOf(filter) > -1) {
+                options[i].style.display = '';
+            } else {
+                options[i].style.display = 'none';
+            }
+        }
+    }
+</script>
+
+
+<script>
+    function handleDropdownChange() {
+        // Get the selected value from the dropdown
+        var selectedOption = document.getElementById("dropdown").value;
+
+        // Get the div elements for options
+        var opt1Div = document.getElementById("opt1");
+        var opt2Div = document.getElementById("opt2");
+        var opt3Div = document.getElementById("opt3"); // Add this line if you have option 3
+
+        // Hide all div
+
+
+        if (selectedOption === "option1") {
+            opt1Div.style.display = "block";
+            opt2Div.style.display = "none";
+        } else {
+            opt1Div.style.display = "none";
+            opt2Div.style.display = "block";
+        }
+
+
+    }
+</script>
+<script>
+
+const displayComplaints = document.getElementById('display-complaints');
+    const forwardComplaints = document.getElementById('forward-complaints');
+
+    function forward(cid) {
+        displayComplaints.classList.add('col-md-8');
+        forwardComplaints.style.display = 'block';
+        //set respondents ID
+        document.getElementById("complaint").value = cid;
+    }
+</script>
+
+
+
+<%- include('../partials/_messages.ejs') %>
+<%- include('../partials/_footer.ejs')%>

@@ -1,0 +1,94 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-6">
+            <form action="/complaints/add" method="post">
+
+                <div class="form-group">
+                    <label for="citizenship">Consumer Number</label>
+                    <input type="text" name="citizenship" id="citizenship" class="form-control" value="<%= typeof (citizenship) != 'undefined' ? citizenship : '' %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Choose Category</label>
+                    <select name="category" id="category" class="browser-default custom-select" required onchange="showSubcategoryField()">
+                        <option disabled selected>Select an option</option>
+                        <option value="Billing">Billing Complaint</option>
+                        <option value="OverHead">OverHead Lines Complaint</option>
+                        <option value="Quality">Quality of Power Complaint</option>
+                        <option value="Meter">Meter Related Complaint</option>
+                        <option value="Power">Interruption in power Complaint</option>
+                        <option value="Refund">Refund Related Complaint</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="subcategoryField1"  style="display: none;">
+                    <label for="subcategory">Subcategory</label>
+                    <select class="browser-default custom-select" required>
+                        <option>Electricity Bill</option>
+                        <option>Wrong Bill</option>
+                        <option>Others</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="subcategoryField2"  style="display: none;">
+                    <label for="subcategory">Subcategory</label>
+                    <select class="browser-default custom-select" required>
+                        <option> New Meter Refund </option>
+                        <option"> Bill Payment Refund </option>
+                        <option value="Others"> Others </option>
+                    </select>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="description">Enter complaint</label>
+                    <textarea name="description" class="form-control" id="description" rows="5" required><%= typeof (description) != 'undefined' ?description:'' %></textarea>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="pdf">Upload PDF Document</label>
+                    <input type="file" name="pdf" id="pdf" accept=".pdf">
+                    <small class="form-text text-muted">Max file size: 5MB</small>
+                </div>
+            
+
+                <button type="submit" class="btn btn-primary btn-block">Send Complaint</button>
+            </form>
+
+        </div>
+
+
+        <div class="col-md-6" id="home-instruction">
+                <div class="card">
+                        <h4 class="card-header"><a>How To Use ?</a></h4>
+                        <div class="card-body">
+                            Type complaint in the field aside. You will then receive a reference ID. Copy that ID safe and use that ID in next Feedback tab to get the feedback from officer.
+                        
+                            <hr>
+                
+                        </div>
+                </div>
+                <%- include('../partials/_messages.ejs') %>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showSubcategoryField() {
+        var categorySelect = document.getElementById("category");
+        var subcategoryField = document.getElementById("subcategoryField1");
+
+        // Get the selected value
+        var selectedCategory = categorySelect.value;
+
+        // Check if the selected category requires a subcategory field
+        if (selectedCategory === "Billing") {
+            subcategoryField1.style.display = "block";
+            subcategoryField2.style.display = "none";
+        } else {
+            subcategoryField2.style.display = "block";
+            subcategoryField1.style.display = "none";
+        }
+    }
+</script>
+
