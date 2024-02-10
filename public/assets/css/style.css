@@ -2,10 +2,12 @@ html {
     box-sizing: border-box;
     margin: 0px;
     padding: 0px;
+
 }
 
 body {
     font-family: 'Hind', sans-serif;
+    background-image: url('../img/body-bg.png.webp');
 }
 
 #logout-btn {

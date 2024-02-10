@@ -5,12 +5,12 @@
 
                 <div class="form-group">
                     <label for="citizenship">Consumer Number</label>
-                    <input type="text" name="citizenship" id="citizenship" class="form-control" value="<%= typeof (citizenship) != 'undefined' ? citizenship : '' %>" required>
+                    <input type="text" name="citizenship" id="citizenship" class="form-control" value="<%= typeof (citizenship) != 'undefined' ? citizenship : '' %>" style="border-radius: 10px;" required>
                 </div>
 
                 <div class="form-group">
                     <label for="category">Choose Category</label>
-                    <select name="category" id="category" class="browser-default custom-select" required onchange="showSubcategoryField()">
+                    <select name="category" id="category" class="browser-default custom-select" required onchange="showSubcategoryField()" style="border-radius: 10px;">
                         <option disabled selected>Select an option</option>
                         <option value="Billing">Billing Complaint</option>
                         <option value="OverHead">OverHead Lines Complaint</option>
@@ -42,7 +42,7 @@
 
                 <div class="form-group mt-3">
                     <label for="description">Enter complaint</label>
-                    <textarea name="description" class="form-control" id="description" rows="5" required><%= typeof (description) != 'undefined' ?description:'' %></textarea>
+                    <textarea style="border-radius: 10px;" name="description" class="form-control" id="description" rows="5" required><%= typeof (description) != 'undefined' ?description:'' %></textarea>
                 </div>
 
                 <div class="form-group mt-3">
@@ -52,7 +52,7 @@
                 </div>
             
 
-                <button type="submit" class="btn btn-primary btn-block">Send Complaint</button>
+                <button type="submit" class="btn btn-primary btn-block" style="border-radius: 10px;">Send Complaint</button>
             </form>
 
         </div>
