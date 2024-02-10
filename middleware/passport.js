@@ -18,7 +18,7 @@ function initialize(passport) {
       console.log(password)
       console.log(user.password)
       console.log(isMatch)
-      if (true) {
+      if (isMatch) {
         console.log(user.password)
         return done(null, user)
       }

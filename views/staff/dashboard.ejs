@@ -2,7 +2,53 @@
 <%- include('../partials/_github-corner.ejs') %>
 <%- include('../partials/_navbar.ejs') %>
 <%- include('../partials/translate.ejs') %>
+<style>
+    .modal {
+display: none;
+position: fixed;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0, 0, 0, 0.7);
+}
 
+/* Modal Content */
+.modal-content {
+position: relative;
+background-color: #ffffff;
+margin: 358px  auto;
+padding: 20px;
+width: 27%;
+height: 25%;
+border-radius: 8px;
+box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* The Close Button */
+.close {
+color: #aaaaaa;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
+transition: color 0.2s;
+text-align: right;
+}
+
+.close:hover,
+.close:focus {
+color: #ff5b5b;
+}
+
+/* Modal Text */
+p {
+font-size: 18px;
+}
+
+
+
+</style>
 
 <div class="alert alert-success" role="alert" style="margin: 10px 50px;">
     <strong>Welcome To staff Dashbord !</strong>
@@ -49,7 +95,7 @@
                                                     <th scope="col" class="bold"> Locaton</th>
                                             <th scope="col" class="bold"> Attatchments</th>
                                             <th scope="col" class="bold">Reply</th>
-                                            <th scope="col" class="bold"></th>
+                                            <th scope="col" class="bold">Instant</th>
 
                                         </tr>
                                     </thead>
@@ -80,13 +126,26 @@
                                                 <input id="desc_<%=complaint._id%>" type="hidden"
                                                     value="<%=complaint.description%>" />
                                             </td>
+                                            
+                                            <td>                                            
+                                            <button type="button" class="btn btn-primary" id="openModalBtn" onclick="run('<%= complaint.description %>', '<%= complaint.description %>')">Instant Reply</button>
+                                            </td>
+                                            
                                         </tr>
                                         <% i = (i+1)%10; %>
                                         <% }); %>
-
+                                        
                                     </tbody>
                                 </table>
+                                <div id="myModal" class="modal">
+                                    <div class="modal-content">
+                                        <span class="close" id="closeModalBtn">&times;</span>
+                                        <p>Some text in the Modal..</p>
+                                    </div>
+                                </div>
+                                
                             </div>
+                            
                         </div>
                     </div>
 
@@ -135,7 +194,44 @@
 
 </div>
 
+<script>
+    function run(description) {
+  console.log('description:', description);
 
+  fetch('http://localhost:5000/staff/aicomplains/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      complaint: description
+    })
+  })
+  .then((response) => {
+    console.log('response:', response);
+  })
+  .catch((error) => console.error('Error posting complaint:', error));
+}
+  </script>
+  <script>
+    let openModalBtn = document.getElementById("openModalBtn");
+let modal = document.getElementById("myModal");
+let closeModalBtn = document.getElementById("closeModalBtn");
+
+openModalBtn.addEventListener("click", function() {
+modal.style.display = "block";
+});
+
+closeModalBtn.addEventListener("click", function() {
+modal.style.display = "none";
+});
+
+window.addEventListener("click", function(event) {
+if (event.target === modal) {
+modal.style.display = "none";
+}
+});
+</script>
 <script>
     const replyField = document.getElementById('reply-field')
     const complaintsField = document.getElementById('complaints')

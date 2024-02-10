@@ -21,6 +21,12 @@ router.get(
   isStaff,
   StaffController.viewComplaints
 )
+router.post(
+  '/aicomplains',
+  checkAuthenticated,
+  isStaff,
+  StaffController.aicomplains
+)
 
 // reply to complaint by staff
 router.post(
